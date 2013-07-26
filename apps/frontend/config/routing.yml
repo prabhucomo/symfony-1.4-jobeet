@@ -2,6 +2,16 @@
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
 # default rules
+job:
+  class:   sfDoctrineRouteCollection
+  options: { model: JobeetJob }
+  
+category:
+  url:      /category/:slug
+  class:    sfDoctrineRoute
+  param:    { module: category, action: show }
+  options:  { model: JobeetCategory, type: object }
+  
 homepage:
   url:   /
   param: { module: default, action: index }
@@ -14,3 +24,26 @@ default_index:
 
 default:
   url:   /:module/:action/*
+  
+job_show_user:
+  url:     /job/:company_slug/:location_slug/:id/:position_slug
+  class:   sfDoctrineRoute
+  options:
+    model: JobeetJob
+    type:  object
+    method_for_query: retrieveActiveJob
+  param:   { module: job, action: show }
+  requirements:
+    id: \d+
+    sf_method: [GET]
+    
+job_search:
+  url:   /search
+  param: { module: job, action: search }
+  
+affiliate:
+  class:   sfDoctrineRouteCollection
+  options:
+    model: JobeetAffiliate
+    actions: [new, create]
+    object_actions: { wait: get }  
